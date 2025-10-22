@@ -1,5 +1,5 @@
 # ==============================================================================
-#      *** TÜRK HUKUKU RAG CHATBOT - PROJE KODU (v8) ***
+#      *** TÜRK HUKUKU RAG CHATBOT - PROJE KODU (v8) - TEK HÜCRE ***
 # ==============================================================================
 # Proje: Türk Hukuk metinleri üzerinde RAG (Retrieval-Augmented Generation)
 #        yöntemiyle çalışan bir chatbot.
@@ -46,16 +46,16 @@ try:
     from langchain_core.documents import Document # LangChain'in standart belge formatı
     from langchain_core.prompts import PromptTemplate # LLM'e göndereceğimiz şablon
     from langchain_core.runnables import RunnablePassthrough, RunnableLambda # LangChain Expression Language (LCEL) zincirini kurmak için
-    
+
     # Colab'e özel 'userdata' secret yöneticisini kontrol et.
     # Eğer Colab'de değilsek (örn: local VSCode), bu import hata verecektir.
-    try: 
+    try:
         from google.colab import userdata; USE_SECRETS = True
         print("Google Colab 'userdata' (Secrets) modülü bulundu.")
-    except ImportError: 
+    except ImportError:
         USE_SECRETS = False # Colab'de değiliz, API anahtarını manuel isteyeceğiz.
         print("Google Colab 'userdata' bulunamadı. API anahtarı manuel istenecek.")
-    
+
     print("✅ Gerekli kütüphaneler başarıyla import edildi.")
 except ImportError as e:
     print(f"❌ Kütüphane import hatası: {e}. Lütfen paket kurulumunu kontrol edin.")
@@ -75,22 +75,22 @@ API_KEY_LOADED = False
 try:
     # Kullanıcıdan API anahtarını güvenli bir şekilde al
     api_key_input = input("Lütfen Gemini API Anahtarınızı Girin: ")
-    if not api_key_input: 
+    if not api_key_input:
         raise ValueError("API Anahtarı girilmedi.")
-    
+
     # Alınan anahtarı işletim sistemi ortam değişkeni (environment variable) olarak ayarlıyoruz.
     # Bu, 'genai' kütüphanesinin anahtarı otomatik olarak bulması için standart bir yoldur.
     os.environ["GEMINI_API_KEY"] = api_key_input
     api_key_env = os.getenv('GEMINI_API_KEY')
-    
-    if not api_key_env: 
+
+    if not api_key_env:
         print("❌ Hata: API anahtarı ortam değişkeni olarak ayarlanamadı.")
-    else: 
+    else:
         # genai kütüphanesini bu anahtarla yapılandır
         genai.configure(api_key=api_key_env)
         print("✅ Gemini API başarıyla yapılandırıldı.")
         API_KEY_LOADED = True # Sonraki adımlar için bayrağı ayarla
-except Exception as e: 
+except Exception as e:
     print(f"❌ Gemini API yapılandırma hatası: {e}")
 print("-" * 50)
 
@@ -107,10 +107,10 @@ if API_KEY_LOADED: # Sadece API anahtarı başarıyla yüklendiyse devam et
     try:
         # ADC kimlik bilgilerinin Colab'de saklandığı varsayılan yol
         adc_path = "/content/.config/application_default_credentials.json"
-        
+
         # Eğer bu dosya zaten varsa, daha önce doğrulama yapılmış demektir.
         # Tekrar sormamak için bu adımı atlıyoruz.
-        if os.path.exists(adc_path): 
+        if os.path.exists(adc_path):
             print("Mevcut ADC dosyası bulundu, kimlik doğrulaması atlanıyor.")
             GCLOUD_AUTH_DONE = True
         else:
@@ -118,16 +118,16 @@ if API_KEY_LOADED: # Sadece API anahtarı başarıyla yüklendiyse devam et
             # 'gcloud auth' komutu bir link açar, kullanıcı izin verir ve bir kod yapıştırır.
              print("Lütfen çıkan linke tıklayıp Google hesabınızla izin verin ve doğrulama kodunu buraya yapıştırın.")
              get_ipython().system('gcloud auth application-default login --quiet --no-launch-browser')
-             
-             if os.path.exists(adc_path): 
+
+             if os.path.exists(adc_path):
                  print("\n✅ ADC kimlik doğrulaması başarıyla tamamlandı.")
                  GCLOUD_AUTH_DONE = True
-             else: 
-                 print("\n⚠ ADC dosyası oluşturulamadı. Embedding adımında sorun yaşanabilir.")
-    except Exception as gcloud_e: 
-        print(f"⚠ gcloud kimlik doğrulama hatası: {gcloud_e}")
+             else:
+                 print("\n⚠️ ADC dosyası oluşturulamadı. Embedding adımında sorun yaşanabilir.")
+    except Exception as gcloud_e:
+        print(f"⚠️ gcloud kimlik doğrulama hatası: {gcloud_e}")
     print("-" * 50)
-else: 
+else:
     print("API Anahtarı yüklenemediği için Google Cloud ADC adımı atlandı.")
     print("-" * 50)
 
@@ -145,24 +145,24 @@ try:
     # 'load_dataset' fonksiyonu ile veriyi çek
     dataset = load_dataset(dataset_name)
     print("✅ Veri seti yüklendi.")
-    
+
     # Genellikle veri 'train' bölünmesinde (split) bulunur
     if 'train' in dataset:
         data = dataset['train']
         print(f"Veri setinin 'train' bölümü alındı. Toplam kayıt: {len(data)}")
-        
+
         # Verinin RAG için uygun olup olmadığını kontrol et.
         # Bizim 'Cevap' sütunundaki metinlere (asıl hukuk metni) ihtiyacımız var.
-        if 'Soru' in data.column_names and 'Cevap' in data.column_names: 
+        if 'Soru' in data.column_names and 'Cevap' in data.column_names:
             print("✅ Gerekli 'Soru' ve 'Cevap' sütunları bulundu."); DATA_LOADED = True
-        else: 
+        else:
             print("❌ Gerekli 'Soru'/'Cevap' sütunları bulunamadı."); data = None
-    else: 
+    else:
         print("❌ Veri setinde 'train' bölümü bulunamadı."); data = None
-except Exception as e: 
+except Exception as e:
     print(f"❌ Veri seti yüklenirken hata oluştu: {e}"); data = None
 
-if not DATA_LOADED: 
+if not DATA_LOADED:
     print("❌ Veri seti yüklenemedi. Sonraki adımlar çalışmayabilir.")
 print("-" * 50)
 
@@ -186,10 +186,10 @@ if DATA_LOADED and data is not None:
     for i, item in enumerate(data):
         page_content = item[CEVAP_COLUMN] # Asıl hukuk metni
         # Orijinal soruyu metadata'ya ekliyoruz. Bu, kaynak takibi için yararlı.
-        metadata = {"source_id": i, SORU_COLUMN: item[SORU_COLUMN]} 
+        metadata = {"source_id": i, SORU_COLUMN: item[SORU_COLUMN]}
         documents_for_rag.append(Document(page_content=page_content, metadata=metadata))
     print(f"✅ {len(documents_for_rag)} adet LangChain 'Document' nesnesi oluşturuldu.")
-    
+
     # 2. Metin Parçalayıcıyı (Text Splitter) Tanımlama
     # RecursiveCharacterTextSplitter: Metinleri "\n\n", sonra "\n", sonra " "
     # gibi ayraçlara göre bölmeye çalışır. Anlamsal bütünlüğü korumaya çalışır.
@@ -197,22 +197,22 @@ if DATA_LOADED and data is not None:
         chunk_size=1000, # Her bir parçanın maksimum karakter sayısı
         chunk_overlap=150  # Parçalar arası ortak karakter sayısı (anlam kaybını önlemek için)
     )
-    
+
     # 3. Parçalama İşlemi
     try:
         doc_chunks = text_splitter.split_documents(documents_for_rag)
         print(f"✅ {len(documents_for_rag)} belge, {len(doc_chunks)} adet metin parçasına (chunk) ayrıldı.")
-        if doc_chunks: 
+        if doc_chunks:
             # İlk parçanın metaverisini basarak işlemin doğruluğunu kontrol et
             print("Test: İlk Parçanın Metaverisi:", doc_chunks[0].metadata); CHUNKS_CREATED = True
-        else: 
+        else:
             print("❌ Parçalama işlemi boş bir liste döndürdü.")
-    except Exception as e: 
+    except Exception as e:
         print(f"❌ Metin bölme işlemi sırasında hata: {e}"); doc_chunks = []
-else: 
+else:
     print("❌ Veri seti yüklenemediği için (Adım 3) parçalama yapılamıyor.")
 
-if not CHUNKS_CREATED: 
+if not CHUNKS_CREATED:
     print("❌ Metin parçaları (chunks) oluşturulamadı.")
 print("-" * 50)
 
@@ -237,29 +237,29 @@ def embed_content_with_retry(content, model="models/text-embedding-004", task_ty
             # Eğer tek bir metin gelirse ve tipi 'QUERY' ise onu kullan,
             # aksi halde (liste veya tek metin fark etmeksizin) 'DOCUMENT' olarak etiketle.
             current_task_type = task_type if isinstance(content, str) and task_type == 'RETRIEVAL_QUERY' else 'RETRIEVAL_DOCUMENT'
-            
+
             result = genai.embed_content(model=model, content=content, task_type=current_task_type)
-            
+
             # Dönen sonucun formatı tekil (embedding) veya çoğul (embeddings) olabilir
             embedding_key = 'embedding' if 'embedding' in result else ('embeddings' if 'embeddings' in result else None)
-            if embedding_key: 
+            if embedding_key:
                 return result[embedding_key] # Başarılı embedding'i döndür
-            else: 
+            else:
                 raise ValueError("Embedding sonucu beklenen 'embedding' veya 'embeddings' anahtarını içermiyor.")
-        
+
         except Exception as e:
             error_str = str(e); print(f"Embedding hatası (Deneme {attempt + 1}/{max_retries}): {error_str[:200]}...")
             # Rate limit hatası (429) veya kaynak tükenmesi hatasını yakala
-            if "Resource has been exhausted" in error_str or "429" in error_str: 
+            if "Resource has been exhausted" in error_str or "429" in error_str:
                 wait_time = delay * 5 # Rate limit için daha uzun bekle
-                print(f"Rate limit tespit edildi, {wait_time} saniye bekleniyor..."); 
+                print(f"Rate limit tespit edildi, {wait_time} saniye bekleniyor...");
                 time.sleep(wait_time); delay *= 2 # Bekleme süresini üssel olarak artır
             elif attempt < max_retries - 1: # Diğer geçici hatalar için
-                print(f"Geçici hata, {delay} saniye bekleniyor..."); 
+                print(f"Geçici hata, {delay} saniye bekleniyor...");
                 time.sleep(delay); delay *= 2 # Bekleme süresini üssel olarak artır
-            else: 
+            else:
                 print("Maksimum deneme sayısına ulaşıldı."); last_exception = e; break # Döngüden çık
-    
+
     if last_exception: # Tüm denemelere rağmen başarısız olduysa
         if is_batch: return [None] * len(content) # Batch ise 'None' listesi döndür
         else: raise last_exception # Tekil ise hatayı fırlat
@@ -269,20 +269,20 @@ def embed_content_with_retry(content, model="models/text-embedding-004", task_ty
 chroma_client = None
 chroma_collection = None
 # Veritabanını Colab ortamında yerel bir klasörde sakla
-db_path = "./chroma_db_law_local_full" 
+db_path = "./chroma_db_law_local_full"
 collection_name = "hukuk_tr_collection_full_local" # DB içindeki koleksiyon adı
 
 # Mevcut sürümde, her çalıştırmada veritabanını sıfırdan oluşturuyoruz.
 # Bu, veride veya chunking ayarlarında değişiklik yapıldığında tutarlılık sağlar.
-DB_CREATED_OR_LOADED = False 
+DB_CREATED_OR_LOADED = False
 
 if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
     print(f"Yerel Chroma veritabanı yolu: {db_path}")
     try:
         # 1. Eski Veritabanını Temizle
         # Eğer bu klasör varsa, içindekileri sil (shutil.rmtree)
-        if os.path.exists(db_path): 
-            print(f"Eski veritabanı '{db_path}' siliniyor..."); 
+        if os.path.exists(db_path):
+            print(f"Eski veritabanı '{db_path}' siliniyor...");
             shutil.rmtree(db_path)
         os.makedirs(db_path, exist_ok=True) # Klasörü (yeniden) oluştur
 
@@ -299,7 +299,7 @@ if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
         all_embeddings = []
         batch_size_embed = 100 # API'ye tek seferde 100 metin gönder (Rate limit'i aşmamak için)
         num_batches_embed = (len(chunk_texts) + batch_size_embed - 1) // batch_size_embed
-        
+
         for i in range(0, len(chunk_texts), batch_size_embed):
             batch_index_embed = i // batch_size_embed + 1
             batch_texts = chunk_texts[i:i+batch_size_embed]
@@ -308,12 +308,12 @@ if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
                 batch_embeddings = embed_content_with_retry(batch_texts, task_type="RETRIEVAL_DOCUMENT")
                 all_embeddings.extend(batch_embeddings)
                 print(f"Embedding Batch {batch_index_embed}/{num_batches_embed} işlendi (Toplam {len(all_embeddings)}/{len(chunk_texts)}).")
-            except Exception as e: 
+            except Exception as e:
                 print(f"❌ Batch {batch_index_embed} işlenirken kritik hata: {e}.")
                 all_embeddings.extend([None] * len(batch_texts)) # Başarısız olanları 'None' ile doldur
-            
+
             time.sleep(1) # API'ye saygı için her batch arası 1 saniye bekle
-        
+
         end_time = time.time()
         print(f"Embedding işlemi toplam {end_time - start_time:.2f} saniye sürdü.")
 
@@ -324,8 +324,8 @@ if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
         valid_metadatas = [chunk_metadatas[i] for i in valid_indices]
         valid_embeddings = [all_embeddings[i] for i in valid_indices]
         valid_ids = [chunk_ids[i] for i in valid_indices]
-        if len(valid_indices) != len(chunk_texts): 
-            print(f"⚠ Uyarı: {len(chunk_texts) - len(valid_indices)} adet metin için embedding hesaplanamadı.")
+        if len(valid_indices) != len(chunk_texts):
+            print(f"⚠️ Uyarı: {len(chunk_texts) - len(valid_indices)} adet metin için embedding hesaplanamadı.")
 
         # 4. ChromaDB'ye Verileri Ekle
         if valid_ids:
@@ -341,11 +341,11 @@ if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
 
                  # Veritabanına ekleme işlemini de batch halinde yapıyoruz.
                  # Binlerce veriyi tek seferde eklemek Chroma'yı yorabilir.
-                 batch_size_chroma = 4000 
+                 batch_size_chroma = 4000
                  num_chroma_batches = (len(valid_ids) + batch_size_chroma - 1) // batch_size_chroma
                  print(f"{len(valid_ids)} öğe Chroma'ya {num_chroma_batches} batch halinde eklenecek...")
                  total_added = 0
-                 
+
                  for i in range(0, len(valid_ids), batch_size_chroma):
                       batch_index_chroma = i // batch_size_chroma + 1
                       # İlgili batch için ID, embedding, metin ve metaveriyi seç
@@ -353,20 +353,20 @@ if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
                       embeddings_batch=valid_embeddings[i:i+batch_size_chroma]
                       documents_batch=valid_texts[i:i+batch_size_chroma]
                       metadatas_batch=valid_metadatas[i:i+batch_size_chroma]
-                      
+
                       print(f"Chroma Batch {batch_index_chroma}/{num_chroma_batches} ({len(ids_batch)} öğe) ekleniyor...")
-                      try: 
+                      try:
                           # Verileri koleksiyona ekle
                           chroma_collection.add(ids=ids_batch, embeddings=embeddings_batch, documents=documents_batch, metadatas=metadatas_batch)
                           total_added += len(ids_batch)
                           print(f"Batch {batch_index_chroma} eklendi. Toplam eklenen: {total_added}/{len(valid_ids)}")
-                      except Exception as add_e: 
+                      except Exception as add_e:
                           print(f"❌ Hata (Chroma Batch {batch_index_chroma} eklenirken): {add_e}")
 
-                 if total_added == len(valid_ids): 
+                 if total_added == len(valid_ids):
                      print(f"✅ Tüm veriler ({total_added}) yerel Chroma veritabanına başarıyla eklendi.")
-                 else: 
-                     print(f"⚠ Uyarı: Veri kaybı var. Eklenen: {total_added}/{len(valid_ids)}")
+                 else:
+                     print(f"⚠️ Uyarı: Veri kaybı var. Eklenen: {total_added}/{len(valid_ids)}")
 
                  # 5. Veritabanı Test Sorgusu (Sanity Check)
                  # DB'nin çalışıp çalışmadığını kontrol etmek için basit bir arama yap
@@ -378,25 +378,25 @@ if CHUNKS_CREATED and doc_chunks and (API_KEY_LOADED or GCLOUD_AUTH_DONE):
                       if query_embedding:
                            # 'query' metodu ile en yakın 2 sonucu (n_results=2) getir
                            results = chroma_collection.query(query_embeddings=[query_embedding], n_results=2)
-                           if results and results.get('ids') and results['ids'][0]: 
-                               print(f"✅ Veritabanı testi başarılı. {len(results['ids'][0])} sonuç bulundu."); 
+                           if results and results.get('ids') and results['ids'][0]:
+                               print(f"✅ Veritabanı testi başarılı. {len(results['ids'][0])} sonuç bulundu.");
                                DB_CREATED_OR_LOADED = True # Her şey yolunda, RAG'a geçebiliriz.
-                           else: 
-                               print("⚠ Test sorgusu sonuç döndürmedi (DB boş olabilir).")
-                      else: 
+                           else:
+                               print("⚠️ Test sorgusu sonuç döndürmedi (DB boş olabilir).")
+                      else:
                           print("❌ Test sorgusu embed edilemedi.")
-                 except Exception as search_e: 
+                 except Exception as search_e:
                      print(f"❌ Veritabanı test sorgusu hatası: {search_e}")
-             except Exception as db_e: 
+             except Exception as db_e:
                  print(f"❌ Yerel Chroma veritabanı kurulum hatası: {db_e}"); chroma_client = None; chroma_collection = None
-        else: 
+        else:
             print("❌ Veritabanına eklenecek geçerli embedding bulunamadı.")
-    except Exception as e: 
+    except Exception as e:
         print(f"❌ Embedding/DB (Adım 5) genel hatası: {e}")
-else: 
+else:
     print("❌ Önceki adımlardaki hatalar (Chunk/API) nedeniyle Adım 5 atlandı.")
 
-if not DB_CREATED_OR_LOADED: 
+if not DB_CREATED_OR_LOADED:
     print("\n❌ Adım 5 tamamlanamadı. Vektör Veritabanı hazır değil.")
 print("-" * 50)
 
@@ -426,7 +426,7 @@ if DB_CREATED_OR_LOADED and chroma_collection is not None:
         # 'temperature=0.3' ile modelin daha tutarlı ve daha az yaratıcı (daha az "halüsinasyon")
         # cevaplar vermesini sağlıyoruz. Hukuk metinleri gibi hassas konular için bu önemlidir.
         llm_model = genai.GenerativeModel(
-            model_name=llm_model_name, 
+            model_name=llm_model_name,
             generation_config={"temperature": 0.3}
         )
         print(f"✅ LLM ({llm_model_name}, T=0.3) tanımlandı.")
@@ -439,26 +439,26 @@ if DB_CREATED_OR_LOADED and chroma_collection is not None:
             try:
                 # Sorguyu, 'RETRIEVAL_QUERY' tipiyle embed et
                 query_embedding = embed_content_with_retry(query, task_type='RETRIEVAL_QUERY')
-                if not query_embedding: 
+                if not query_embedding:
                     return "Sorgu vektöre dönüştürülemedi."
-                
+
                 # ChromaDB'den en yakın 'k' sonucu (embedding'e göre) sorgula
                 # Sadece 'documents' (metinler) bölümünü iste
                 results = chroma_collection.query(
-                    query_embeddings=[query_embedding], 
-                    n_results=k, 
+                    query_embeddings=[query_embedding],
+                    n_results=k,
                     include=['documents']
                 )
-                
+
                 # Sonuçları formatla (birleştir)
-                if results and results.get('documents') and results['documents'][0]: 
+                if results and results.get('documents') and results['documents'][0]:
                     context = "\n\n".join(results['documents'][0])
                     # print(f"   [Debug: {len(results['documents'][0])} adet bağlam (context) bulundu.]") # (Debug için)
                     return context
-                else: 
+                else:
                     # print("   [Debug: İlgili bağlam bulunamadı.]") # (Debug için)
                     return "İlgili bilgi bulunamadı."
-            except Exception as e: 
+            except Exception as e:
                 return f"Bilgi alınırken hata oluştu: {e}"
         print("✅ Retriever (Bilgi Çekici) fonksiyonu tanımlandı.")
 
@@ -485,32 +485,32 @@ if DB_CREATED_OR_LOADED and chroma_collection is not None:
         # LCEL (LangChain Expression Language), '|' (pipe) operatörü ile
         # adımları birbirine bağlamamızı sağlar.
         # Zincir şu adımları izler:
-        rag_chain = ( 
+        rag_chain = (
             # Adım A: Zincir, 'question' içeren bir dictionary ile başlar.
             # RunnablePassthrough() gelen ham sorguyu (string) alır ve 'question' anahtarı altına koyar.
             # Girdi: "Devletin şekli nedir?"
             # Çıktı: {"question": "Devletin şekli nedir?"}
-            {"question": RunnablePassthrough()} 
-            
+            {"question": RunnablePassthrough()}
+
             # Adım B: 'context' anahtarını ekle.
             # 'retrieve_context' fonksiyonunu 'question' ile çalıştır ve sonucunu 'context'e ata.
             # Girdi: {"question": "..."}
             # Çıktı: {"question": "...", "context": "[ilgili hukuk metni...]"}
-            | RunnablePassthrough.assign(context=lambda x: retrieve_context(x["question"])) 
-            
+            | RunnablePassthrough.assign(context=lambda x: retrieve_context(x["question"]))
+
             # Adım C: Prompt'u formatla.
             # {'question': ..., 'context': ...} girdisini alıp prompt şablonuna yerleştirir.
             # Çıktı olarak formatlanmış tam bir metin (string) verir.
             # Girdi: {"question": "...", "context": "..."}
             # Çıktı: "Yalnızca aşağıda verilen bağlamı... Soru: ... Yanıt:"
-            | RunnableLambda(lambda x: prompt_template.format(question=x["question"], context=x["context"])) 
-            
+            | RunnableLambda(lambda x: prompt_template.format(question=x["question"], context=x["context"]))
+
             # Adım D: LLM'i Çağır.
             # Formatlanmış metni (prompt) alır ve doğrudan genai modeline gönderir.
             # Modelden gelen '.text' yanıtını döndürür.
             # Girdi: "Yalnızca aşağıda verilen bağlamı..."
             # Çıktı: "Türkiye Devleti bir Cumhuriyettir."
-            | RunnableLambda(lambda formatted_prompt: llm_model.generate_content(formatted_prompt).text) 
+            | RunnableLambda(lambda formatted_prompt: llm_model.generate_content(formatted_prompt).text)
         )
         print("✅ RAG zinciri (LCEL) başarıyla oluşturuldu.")
 
@@ -525,19 +525,27 @@ if DB_CREATED_OR_LOADED and chroma_collection is not None:
             end_time = time.time()
             print(f"Test Cevabı ({end_time - start_time:.2f} s): {response}")
             RAG_READY = True
-            if "bulunamadı" in response: 
-                print("⚠ Test cevabı bilgi bulamadı (Bu durum, veritabanının ilgili bilgiyi içermemesi veya retriever'ın bulamaması durumunda normaldir).")
-        except Exception as invoke_e: 
+            if "bulunamadı" in response:
+                print("⚠️ Test cevabı bilgi bulamadı (Bu durum, veritabanının ilgili bilgiyi içermemesi veya retriever'ın bulamaması durumunda normaldir).")
+        except Exception as invoke_e:
             print(f"❌ RAG zinciri testi (invoke) sırasında hata: {invoke_e}")
 
-    except Exception as e: 
+    except Exception as e:
         print(f"❌ RAG pipeline (Adım 6) kurulum hatası: {e}"); rag_chain = None
-else: 
+else:
     print("❌ Önceki adımlarda (Veritabanı) hata olduğu için RAG zinciri kurulamadı.")
 
-if not RAG_READY: 
+if not RAG_READY:
     print("\n❌ Adım 6 tamamlanamadı. Chatbot hazır değil.")
 print("-" * 50)
+
+
+# ==============================================================================
+# ==============================================================================
+# *** İKİNCİ HÜCRE BURADA BAŞLIYOR (Adım 7-9) ***
+# ==============================================================================
+# ==============================================================================
+
 
 # ==============================================================================
 # Adım 7: Streamlit Arayüz Kodu (app.py - Güvenlik Ayarları Eklendi)
@@ -621,7 +629,7 @@ def embed_content_with_retry(content, model=MODEL_NAME_EMBEDDING, task_type="RET
             else: raise ValueError("Embedding sonucu anahtar içermiyor.")
         except Exception as e:
             # Hata durumunda kullanıcıya 'toast' bildirimi göster
-            st.toast(f"Embedding hatası (Deneme {{{{attempt + 1}}}}): {{{{e}}}}", icon="⚠")
+            st.toast(f"Embedding hatası (Deneme {{{{attempt + 1}}}}): {{{{e}}}}", icon="⚠️")
             last_exception = e
             if attempt < max_retries - 1:
                 time.sleep(delay); delay *= 2 # Hata sonrası bekleme (exponential backoff)
@@ -642,7 +650,7 @@ def get_chroma_collection():
         if not os.path.exists(DB_PATH):
             # Eğer yoksa, 'app.py' dosyasının bulunduğu dizine göre
             # göreceli (relative) yolu bulmaya çalış.
-            script_dir = os.path.dirname(_file_)
+            script_dir = os.path.dirname(__file__)
             db_path_rel = os.path.join(script_dir, DB_PATH)
             if not os.path.exists(db_path_rel):
                  st.error(f"Veritabanı yolu bulunamadı: '{{DB_PATH}}' veya '{{db_path_rel}}'.")
@@ -659,7 +667,7 @@ def get_chroma_collection():
         st.info(f"Yerel Chroma koleksiyonu '{{COLLECTION_NAME}}' yüklendi (Öğe Sayısı: {{collection.count()}}).")
         # DB'nin boş olup olmadığını kontrol et
         if collection.count() == 0:
-            st.error("⚠ Yerel Chroma koleksiyonu boş! Colab'de Adım 5'in çalıştığından emin olun.")
+            st.error("⚠️ Yerel Chroma koleksiyonu boş! Colab'de Adım 5'in çalıştığından emin olun.")
         return collection
     except Exception as e:
         st.error(f"Yerel Chroma yüklenirken/alınırken hata: {{e}}")
@@ -789,7 +797,7 @@ def get_response_from_rag(user_query):
             # Eğer 'answer' boşsa VE 'prompt_feedback' bir 'block_reason' (Engelleme Nedeni)
             # içeriyorsa, bu, cevabın Gemini güvenlik filtresine takıldığını gösterir.
             if not answer and response.prompt_feedback.block_reason:
-                 st.warning(f"⚠ Yanıt güvenlik nedeniyle engellendi: {{response.prompt_feedback.block_reason}}")
+                 st.warning(f"⚠️ Yanıt güvenlik nedeniyle engellendi: {{response.prompt_feedback.block_reason}}")
                  return "Üzgünüm, ürettiğim yanıt güvenlik politikalarımız nedeniyle engellendi."
 
             # 4. Kaynakları Cevaba Ekle
@@ -970,7 +978,6 @@ pandas"""
          print(f"❌ requirements.txt dosyası yazılırken hata: {e}")
      print("-" * 50)
      print("🏁 Tüm Adımlar Tamamlandı.")
-     print("➡ Chatbot'u kullanmak için yukarıdaki Streamlit (ngrok) linkini kullanabilirsiniz.")
+     print("➡️ Chatbot'u kullanmak için yukarıdaki Streamlit (ngrok) linkini kullanabilirsiniz.")
 else:
-    print("🏁 Adımlar tamamlandı ancak Streamlit arayüzü başlatılamadı (Detaylar Adım 8'de)."
-
+    print("🏁 Adımlar tamamlandı ancak Streamlit arayüzü başlatılamadı (Detaylar Adım 8'de).")
