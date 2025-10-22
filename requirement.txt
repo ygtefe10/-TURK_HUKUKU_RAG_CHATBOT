@@ -1,0 +1,12 @@
+google-generativeai~=0.8.5
+chromadb~=0.5.4
+datasets~=2.20.0
+langchain-text-splitters~=0.3.11
+langchain-core~=0.3.11
+langchain-community~=0.2.19
+streamlit~=1.39.0
+sentence_transformers~=3.0.1
+langchain~=0.2.22
+python-dotenv~=1.0.1
+pyngrok~=7.1.6
+pandas--------------------------------------------------
