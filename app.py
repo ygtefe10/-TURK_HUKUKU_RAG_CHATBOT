@@ -15,6 +15,33 @@ import subprocess # Sistem komutlarını çalıştırmak için
 import threading  # (Şu an kullanılmıyor ancak Streamlit gibi arayüzler için gerekebilir)
 import pandas as pd # Veri işleme için (şu an doğrudan kullanılmıyor ancak gelecekte veri analizi için tutuluyor)
 
+import streamlit as st
+import os
+import json # Bunu ekleyin
+
+# --- Service Account Kimlik Doğrulaması ---
+# Streamlit Secrets'tan JSON içeriğini oku
+google_creds_json_str = st.secrets.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+
+if google_creds_json_str:
+    try:
+        # JSON içeriğini geçici bir dosyaya yaz
+        creds_path = "google_creds.json"
+        with open(creds_path, "w") as f:
+            f.write(google_creds_json_str)
+
+        # Ortam değişkenini bu dosyanın yoluna ayarla
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = creds_path
+        print("✅ Google Cloud kimlik bilgileri Service Account ile ayarlandı.")
+    except Exception as e:
+        st.error(f"Service Account JSON işlenirken hata oluştu: {e}")
+else:
+    # Eğer secret bulunamazsa uyarı ver (isteğe bağlı)
+    print("⚠ GOOGLE_APPLICATION_CREDENTIALS_JSON secret'ı bulunamadı. ADC varsayılana dönebilir.")
+# --- Kimlik Doğrulama Bitişi ---
+
+# ... (app.py'nin geri kalanı burada devam eder: import google.generativeai as genai ...)
+
 print(f"--- Proje Başlangıç Zamanı: {time.strftime('%Y-%m-%d %H:%M:%S')} ---")
 
 # ==============================================================================
@@ -976,4 +1003,5 @@ pandas"""
      print("➡️ Chatbot'u kullanmak için yukarıdaki Streamlit (ngrok) linkini kullanabilirsiniz.")
 else:
     print("🏁 Adımlar tamamlandı ancak Streamlit arayüzü başlatılamadı (Detaylar Adım 8'de).")
+
 
