@@ -26,12 +26,7 @@ print(f"--- Proje Başlangıç Zamanı: {time.strftime('%Y-%m-%d %H:%M:%S')} ---
 print("\n--- Adım 1: Gerekli Paketler Yükleniyor ---")
 print("Gerekli tüm kütüphaneler yükleniyor (Bu işlem biraz sürebilir)...")
 
-# '%%capture' magic komutu, pip kurulum çıktılarının Colab ekranını
-# doldurmasını engeller. Çıktıyı gizleyerek notebook'un daha temiz kalmasını sağlar.
-get_ipython().run_cell_magic('capture', '', '''
-!pip install -q -U pandas pyarrow
-!pip install -q -U google-generativeai chromadb datasets langchain-text-splitters langchain-core langchain-community streamlit faiss-cpu sentence_transformers langchain python-dotenv pyngrok
-''')
+
 print("✅ Gerekli ana paketler yüklendi/güncellendi.")
 
 # Paketler yüklendikten sonra, onları kod içinde kullanabilmek için import ediyoruz.
@@ -981,3 +976,4 @@ pandas"""
      print("➡️ Chatbot'u kullanmak için yukarıdaki Streamlit (ngrok) linkini kullanabilirsiniz.")
 else:
     print("🏁 Adımlar tamamlandı ancak Streamlit arayüzü başlatılamadı (Detaylar Adım 8'de).")
+
