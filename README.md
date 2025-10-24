@@ -2,9 +2,11 @@ title: Hukuk Chatbot
 emoji: ⚖
 sdk: streamlit
 app_file: app.py
-pinned: false
+pinned: false 
 
-⚖ TÜRK HUKUKU RAG CHATBOT ⚖ Bu proje, Türk Hukuku alanında uzmanlaşmış, yapay zeka destekli bir web uygulamasıdır. Retrieval Augmented Generation (RAG) mimarisiyle geliştirilen bu araç, kullanıcılara Türk Hukuku ile ilgili sorularına, ilgili mevzuat ve bilgilere dayanarak anında ve bağlamsal yanıtlar sunar.
+
+⚖ TÜRK HUKUKU RAG CHATBOT ⚖ 
+Bu proje, Türk Hukuku alanında uzmanlaşmış, yapay zeka destekli bir web uygulamasıdır. Retrieval Augmented Generation (RAG) mimarisiyle geliştirilen bu araç, kullanıcılara Türk Hukuku ile ilgili sorularına, ilgili mevzuat ve bilgilere dayanarak anında ve bağlamsal yanıtlar sunar.
 
 Merhaba! 👋 Biz, 3. sınıf bilgisayar mühendisliği öğrencileri olarak bu projeyi geliştirdik. Bu, yapay zekanın "halüsinasyon" (bilgi uydurma) sorununu nasıl çözebileceğimizi araştırdığımız bir RAG denemesidir. Amacımız, genel kültürle değil, doğrudan kaynak metinle cevap veren bir sistem kurmaktı.
 
