@@ -1,27 +1,30 @@
-# -TURK_HUKUKU_RAG_CHATBOT
-⚖ TÜRK HUKUKU RAG CHATBOT ⚖
-Bu proje, Türk Hukuku alanında uzmanlaşmış, yapay zeka destekli bir web uygulamasıdır. Retrieval Augmented Generation (RAG) mimarisiyle geliştirilen bu araç, kullanıcılara Türk Hukuku ile ilgili sorularına, ilgili mevzuat ve bilgilere dayanarak anında ve bağlamsal yanıtlar sunar.
+title: Hukuk Chatbot
+emoji: ⚖
+sdk: streamlit
+app_file: app.py
+pinned: false
+
+⚖ TÜRK HUKUKU RAG CHATBOT ⚖ Bu proje, Türk Hukuku alanında uzmanlaşmış, yapay zeka destekli bir web uygulamasıdır. Retrieval Augmented Generation (RAG) mimarisiyle geliştirilen bu araç, kullanıcılara Türk Hukuku ile ilgili sorularına, ilgili mevzuat ve bilgilere dayanarak anında ve bağlamsal yanıtlar sunar.
 
 Merhaba! 👋 Biz, 3. sınıf bilgisayar mühendisliği öğrencileri olarak bu projeyi geliştirdik. Bu, yapay zekanın "halüsinasyon" (bilgi uydurma) sorununu nasıl çözebileceğimizi araştırdığımız bir RAG denemesidir. Amacımız, genel kültürle değil, doğrudan kaynak metinle cevap veren bir sistem kurmaktı.
 
-🚀 Canlı Demo (Live Demo)
-Bu proje bir Google Colab not defteri olarak tasarlanmıştır. Canlı demo, statik bir link üzerinde değil, doğrudan Colab not defterinin çalıştırılmasıyla oluşturulur.
+🚀 Canlı Demo (Live Demo) Bu proje bir Google Colab not defteri olarak tasarlanmıştır. Canlı demo, statik bir link üzerinde değil, doğrudan Colab not defterinin çalıştırılmasıyla oluşturulur.
 
 Not defterindeki tüm adımlar (Adım 1'den 8'e kadar) başarıyla çalıştırıldığında, 8. Adım'ın çıktısı olarak size özel, geçici bir ngrok public URL'i verilecektir. Arayüze bu link üzerinden erişebilirsiniz.
 
+✅✅✅ Streamlit arayüzü hazır: https://ornek-adres.ngrok-free.dev
 
-🎯 Proje Hakkında
-Bu chatbot, karmaşık hukuki sorulara hızlı ve güvenilir yanıtlar bulma zorluğunu ele alır. Kullanıcılara anında, ilgili veri setine dayalı yanıtlar sunar ve yanıtların hangi kaynaklardan (ilgili sorulardan) türetildiğini göstererek şeffaflık sağlar.
+Proje Arayüz Gifi (Buraya ngrok linki çalışırken çektiğiniz bir ekran kaydı GIF'i ekleyebilirsiniz!)
 
-Neden Bu Proje? (Motivasyonumuz)
-sınıf bilgisayar mühendisliği öğrencileri olarak, yapay zekanın sadece 'sohbet' etmesinden öte, gerçek dünyadaki karmaşık problemlere nasıl çözüm olabileceğini görmek istedik. Hukuk metinleri, yanlış bir bilginin büyük sorunlara yol açabileceği kritik bir alan.
+🎯 Proje Hakkında Bu chatbot, karmaşık hukuki sorulara hızlı ve güvenilir yanıtlar bulma zorluğunu ele alır. Kullanıcılara anında, ilgili veri setine dayalı yanıtlar sunar ve yanıtların hangi kaynaklardan (ilgili sorulardan) türetildiğini göstererek şeffaflık sağlar.
+
+Neden Bu Proje? (Motivasyonumuz) sınıf bilgisayar mühendisliği öğrencileri olarak, yapay zekanın sadece 'sohbet' etmesinden öte, gerçek dünyadaki karmaşık problemlere nasıl çözüm olabileceğini görmek istedik. Hukuk metinleri, yanlış bir bilginin büyük sorunlara yol açabileceği kritik bir alan.
 
 Bu projede, LLM'in (Gemini 2.0 Flash) "halüsinasyon" denilen, yani modelin kendine güvenerek yanlış bilgi uydurması sorununu çözmeyi hedefledik. RAG mimarisi, bu soruna mükemmel bir çözüm sundu. Modele "Bu soruyu bil" demek yerine, "Bu soruyu cevaplamak için bu belgelere bak " demeyi öğrettik.
 
 Kısacası, modelin "ezberlemesi" yerine "araştırmasını" ve "kaynak göstermesini" sağladık.
 
-🛠 Nasıl Çalışır: RAG Mimarisi
-Chatbot, doğru ve bağlama duyarlı yanıtlar sağlamak için eksiksiz bir RAG hattı (pipeline) uygular:
+🛠 Nasıl Çalışır: RAG Mimarisi Chatbot, doğru ve bağlama duyarlı yanıtlar sağlamak için eksiksiz bir RAG hattı (pipeline) uygular:
 
 📄 Veri Yükleme: Belirlenen Renicames/turkish-law-chatbot veri seti Hugging Face'den yüklenir.
 
@@ -37,8 +40,7 @@ Chatbot, doğru ve bağlama duyarlı yanıtlar sağlamak için eksiksiz bir RAG 
 
 🖥 Arayüz Sunma: Tüm bu sistem, Streamlit ile oluşturulan interaktif bir chat arayüzü üzerinden pyngrok aracılığıyla canlı olarak yayınlanır.
 
-🧗‍♀ Karşılaşılan Zorluklar ve Öğrendiklerimiz
-Bu projeyi yaparken takım olarak, teoride basit görünen bazı adımların pratikte oldukça zorlayıcı olduğunu fark ettik:
+🧗‍♀ Karşılaşılan Zorluklar ve Öğrendiklerimiz Bu projeyi yaparken takım olarak, teoride basit görünen bazı adımların pratikte oldukça zorlayıcı olduğunu fark ettik:
 
 API Rate Limit (429 Hatası): Veri setindeki yüzlerce metni text-embedding-004 modeli ile vektöre çevirirken sürekli Google API limitlerine takıldık.
 
@@ -54,8 +56,7 @@ Prompt Engineering (Doğru Komutu Verme): Modelin sadece verdiğimiz bağlamı k
 
 Colab ve Streamlit Entegrasyonu: ngrok tünellemesi, Streamlit sunucusunu (app.py) dış dünyaya açmak için kritikti. Tüm adımların (API anahtarları, app.py'nin yazılması, veritabanının varlığı) doğru sırada çalışmasını sağlamak zaman aldı.
 
-🧪 Örnek Test Sorguları ve Beklenen Yanıtlar
-Uygulamayı çalıştırdığınızda, chatbot'un RAG mimarisini test etmek için aşağıdaki gibi spesifik hukuk sorularını sormayı deneyebilirsiniz. Bu sorular, veri setimizden alınmış örneklerdir ve botun bunlara benzer, bağlama dayalı yanıtlar vermesi beklenir:
+🧪 Örnek Test Sorguları ve Beklenen Yanıtlar Uygulamayı çalıştırdığınızda, chatbot'un RAG mimarisini test etmek için aşağıdaki gibi spesifik hukuk sorularını sormayı deneyebilirsiniz. Bu sorular, veri setimizden alınmış örneklerdir ve botun bunlara benzer, bağlama dayalı yanıtlar vermesi beklenir:
 
 Soru 1: "Devletin şekli nedir?"
 
@@ -83,8 +84,7 @@ Beklenen Yanıt (veya benzeri):
 
 Bu sorgular ve beklenen yanıtlar, botun yerel ChromaDB veritabanından doğru bağlamı (ilgili kanun maddesini) bulup bulamadığını ve cevabını bu bağlama göre (halüsinasyon görmeden) üretip üretmediğini görmek için iyi bir yoldur. Ayrıca, botun cevabın sonunda verdiği "Kaynaklar (İlgili Sorular):" bölümünü de kontrol ederek hangi metin parçalarını kullandığını görebilirsiniz.
 
-🌟 Temel Özellikler
-Uzmanlık Alanı: Sadece Türk Hukuku veri seti (Renicames/turkish-law-chatbot) üzerinden eğitilmiştir.
+🌟 Temel Özellikler Uzmanlık Alanı: Sadece Türk Hukuku veri seti (Renicames/turkish-law-chatbot) üzerinden eğitilmiştir.
 
 Gerçek Zamanlı RAG: Veri seti, not defteri her çalıştığında yeniden işlenir ve yerel vektör veritabanı sıfırdan oluşturulur.
 
@@ -94,11 +94,9 @@ Kaynak Gösterme: Chatbot, ürettiği yanıtların hangi kaynak sorulara dayand�
 
 Kolay Kurulum: Tek bir Google Colab not defteri üzerinden tüm bağımlılıkları kurar ve çalışır.
 
-📚 Veri Seti (Dataset)
-Bu uygulama, Hugging Face üzerinde bulunan Renicames/turkish-law-chatbot veri setini kullanır. Bu veri seti, Soru-Cevap formatında hukuki bilgiler içermektedir. RAG mimarisi, 'Cevap' sütunundaki metinleri vektörleştirerek bilgi tabanını oluşturur.
+📚 Veri Seti (Dataset) Bu uygulama, Hugging Face üzerinde bulunan Renicames/turkish-law-chatbot veri setini kullanır. Bu veri seti, Soru-Cevap formatında hukuki bilgiler içermektedir. RAG mimarisi, 'Cevap' sütunundaki metinleri vektörleştirerek bilgi tabanını oluşturur.
 
-💻 Kullanılan Teknolojiler
-Platform: Google Colab
+💻 Kullanılan Teknolojiler Platform: Google Colab
 
 GenAI: Google Gemini 2.0 Flash, Google Embedding (text-embedding-004), LangChain (LCEL)
 
@@ -110,8 +108,7 @@ Arayüz & Sunum: Streamlit, pyngrok
 
 Yardımcı Kütüphaneler: pandas, langchain-text-splitters
 
-🚀 Kurulum ve Çalıştırma (Google Colab)
-Bu proje, bir Google Colab not defteri olarak tasarlanmıştır ve en kolay bu platformda çalıştırılır.
+🚀 Kurulum ve Çalıştırma (Google Colab) Bu proje, bir Google Colab not defteri olarak tasarlanmıştır ve en kolay bu platformda çalıştırılır.
 
 Google Colab'da Açın: Proje .ipynb dosyasını Google Colab'da açın.
 
@@ -129,8 +126,7 @@ Ek Adım (ADC): Embedding modeli için Google Cloud kimlik doğrulaması gerekeb
 
 Uygulamaya Erişin: Tüm hücreler başarıyla tamamlandığında, Adım 8'in çıktısında ngrok.io ile biten bir public URL göreceksiniz. Bu linke tıklayarak chat arayüzüne erişebilirsiniz.
 
-📂 Proje Yapısı (Oluşturulan Dosyalar)
-Bu bir Colab not defteri olduğu için, proje yapısı kodun çalışması sırasında Google Colab ortamında dinamik olarak oluşturulan dosyalardan ibarettir:
+📂 Proje Yapısı (Oluşturulan Dosyalar) Bu bir Colab not defteri olduğu için, proje yapısı kodun çalışması sırasında Google Colab ortamında dinamik olarak oluşturulan dosyalardan ibarettir:
 
 TÜRK_HUKUKU_RAG_CHATBOT.ipynb: Çalıştırdığınız ana not defteri dosyası.
 
@@ -140,8 +136,7 @@ requirements.txt: (Adım 9'da oluşturulur) Projenin çalışması için gereken
 
 chroma_db_law_local_full/ Klasörü: (Adım 5'te oluşturulur) Yerel ChromaDB vektör veritabanının dosyalarını içeren klasör.
 
-💡 Gelecek Planları ve Geliştirme Fikirleri
-Zaman kısıtlamaları nedeniyle yapamadığımız ancak bu projeyi daha da ileriye taşıyacak bazı fikirlerimiz:
+💡 Gelecek Planları ve Geliştirme Fikirleri Zaman kısıtlamaları nedeniyle yapamadığımız ancak bu projeyi daha da ileriye taşıyacak bazı fikirlerimiz:
 
 Kalıcı Deploy: Projeyi ngrok yerine Streamlit Community Cloud'a taşımak. (Bunun için build_database.py ve app.py olarak ikiye ayırıp, veritabanı dosyalarını GitHub LFS ile yüklememiz gerekecek.)
 
@@ -149,23 +144,22 @@ Daha Geniş Veri Seti: Sadece Soru-Cevap değil, T.C. Anayasası'nın veya Ceza 
 
 Sohbet Hafızası: Modelin sadece son soruyu değil, önceki konuşmaları da hatırlamasını sağlamak (örn: LangChain ConversationBufferMemory).
 
-📬 İletişim
-Projeyi incelediğiniz için teşekkür ederiz! Fikirlerinizi, eleştirilerinizi veya sorularınızı duymaktan mutluluk duyarız.
+📬 İletişim Projeyi incelediğiniz için teşekkür ederiz! Fikirlerinizi, eleştirilerinizi veya sorularınızı duymaktan mutluluk duyarız.
 
 (Bu bölümü kendi bilgilerinizle doldurabilirsiniz.)
 
-[Öğrenci 1 Adı Soyadı]
+Yiğit Efe Kılıç
 
-E-posta: mailadresi1@gmail.com
+E-posta: ygtefe10@gmail.com
 
-GitHub: github.com/kullaniciadi1
+GitHub: https://github.com/ygtefe10
 
-LinkedIn: linkedin.com/in/kullaniciadi1
+LinkedIn: www.linkedin.com/in/yigitefekilic
 
-[Öğrenci 2 Adı Soyadı]
+Mehmet Yusuf İzci
 
-E-posta: mailadresi2@gmail.com
+E-posta: yufuslora@gmail.com
 
-GitHub: github.com/kullaniciadi2
+GitHub: https://github.com/Yusuflora
 
-LinkedIn: linkedin.com/in/kullaniciadi2
+LinkedIn: www.linkedin.com/in/mehmetyusufizci
