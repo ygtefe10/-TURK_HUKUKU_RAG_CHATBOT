@@ -9,10 +9,6 @@ Bu proje bir Google Colab not defteri olarak tasarlanmıştır. Canlı demo, sta
 
 Not defterindeki tüm adımlar (Adım 1'den 8'e kadar) başarıyla çalıştırıldığında, 8. Adım'ın çıktısı olarak size özel, geçici bir ngrok public URL'i verilecektir. Arayüze bu link üzerinden erişebilirsiniz.
 
-✅✅✅ Streamlit arayüzü hazır: https://ornek-adres.ngrok-free.dev
-
-Proje Arayüz Gifi
-(Buraya ngrok linki çalışırken çektiğiniz bir ekran kaydı GIF'i ekleyebilirsiniz!)
 
 🎯 Proje Hakkında
 Bu chatbot, karmaşık hukuki sorulara hızlı ve güvenilir yanıtlar bulma zorluğunu ele alır. Kullanıcılara anında, ilgili veri setine dayalı yanıtlar sunar ve yanıtların hangi kaynaklardan (ilgili sorulardan) türetildiğini göstererek şeffaflık sağlar.
